@@ -1,0 +1,21 @@
+;;;-------------------------------------------------------------------------------------------------
+;;; Copyright Alan Dipert, Micha Niskin, & jumblerg. All rights reserved. The use and distribution
+;;; terms for this software are covered by the Eclipse Public License 1.0 (http://www.eclipse.org/
+;;; legal/epl-v10.html). By using this software in any fashion, you are agreeing to be bound by the
+;;; terms of this license.  You must not remove this notice, or any other, from this software.
+;;;-------------------------------------------------------------------------------------------------
+
+[:project      tailrecursion/boot.task.tomcat
+ :version      "0.1.0-SNAPSHOT"
+ :url          "http://github.com/tailrecursion/boot.task.tomcat"
+ :description  "Boot task to create a standalone Tomcat server."
+ :license      {:name "Eclipse Public License"
+                :url  "http://www.eclipse.org/legal/epl-v10.html"}
+ :dependencies [[org.apache.tomcat.embed/tomcat-embed-jasper       "8.0.8"]
+                [org.apache.tomcat.embed/tomcat-embed-logging-juli "8.0.8"]
+                [org.apache.tomcat.embed/tomcat-embed-core         "8.0.8"]
+                [tailrecursion/boot.notify                         "2.0.2"          :scope "test"] ;;todo: should be boot-notify or boot.task.notif
+                [tailrecursion/boot.task                           "3.0.0-SNAPSHOT" :scope "test"] ]
+  :src-paths    #{"src"}
+  :out-path     "tgt"
+  :dst-path     "dst" ]
