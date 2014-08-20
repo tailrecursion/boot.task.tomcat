@@ -22,19 +22,16 @@
   (let [[group artifact] ((juxt namespace name) sym)]
     [(or group artifact) artifact] ))
 
-(defn filename [aid vers ext] (str (if aid (str aid "-" vers) "project") "." ext)) ;; should use boot tmpdir
-
 ;;; private ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn create [app-file port join?]
-  (let [srv-path (c/mktmpdir! ::webapp)
-        join     #(if join? (do (.await (.getServer %)) %) %)
-        start    #(doto %
-                    (.setBaseDir (.getAbsolutePath srv-path))
-                    (.setPort port)
-                    (.addWebapp "" (.getAbsolutePath app-file))
-                    (.start) ) ]
-    (.mkdirs (io/file srv-path "webapps"))
+(defn create [base-dir war-file port join?]
+  (let [join  #(if join? (do (.await (.getServer %)) %) %)
+        start #(doto %
+                (.setBaseDir (.getAbsolutePath base-dir))
+                (.setPort port)
+                (.addWebapp "" (.getAbsolutePath war-file))
+                (.start) )]
+    (.mkdirs (io/file base-dir "webapps"))
     (-> (Tomcat.) start join) ))
 
 (defn destroy [^Tomcat server]
@@ -50,7 +47,9 @@
   (default false)."
   [& {:keys [port join?] :or {port 8000 join? false}}]
   (println  "Starting Tomcat server...")
-  (let [aid  (second (extract-ids (c/get-env :project)))
-        file (io/file (c/get-env :dst-path) (filename aid (c/get-env :version) "war")) ]
+  (let [artifact-id (second (extract-ids (c/get-env :project)))
+        version     (c/get-env :version) ]
     (c/with-post-wrap
-      (swap! server #(do (if % (destroy %)) (create file port join?)))  )))
+      (let [war-file (first (c/by-ext ["war"] (c/src-files)))
+            base-dir #(c/mkoutdir! ::base-dir) ]
+        (swap! server #(do (if % (destroy %)) (create (base-dir) war-file port join?))) ))))

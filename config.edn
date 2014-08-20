@@ -13,9 +13,8 @@
                 :url  "http://www.eclipse.org/legal/epl-v10.html"}
  :dependencies [[org.apache.tomcat.embed/tomcat-embed-jasper       "8.0.8"]
                 [org.apache.tomcat.embed/tomcat-embed-logging-juli "8.0.8"]
-                [org.apache.tomcat.embed/tomcat-embed-core         "8.0.8"]
+                [org.apache.tomcat.embed/tomcat-embed-core         "8.0.8" ]
                 [tailrecursion/boot.notify                         "2.0.2"          :scope "test"] ;;todo: should be boot-notify or boot.task.notif
                 [tailrecursion/boot.task                           "3.0.0-SNAPSHOT" :scope "test"] ]
   :src-paths    #{"src"}
-  :out-path     "tgt"
-  :dst-path     "dst" ]
+  :out-path     "tgt" ]
