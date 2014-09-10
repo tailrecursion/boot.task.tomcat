@@ -1,12 +1,29 @@
-#!/usr/bin/env boot
-#tailrecursion.boot.core/version "2.5.0"
+;;;-------------------------------------------------------------------------------------------------
+;;; Copyright Alan Dipert, Micha Niskin, & jumblerg. All rights reserved. The use and distribution
+;;; terms for this software are covered by the Eclipse Public License 1.0 (http://www.eclipse.org/
+;;; legal/epl-v10.html). By using this software in any fashion, you are agreeing to be bound by the
+;;; terms of this license.  You must not remove this notice, or any other, from this software.
+;;;-------------------------------------------------------------------------------------------------
 
-(apply set-env! (read-string (slurp "config.edn")))
+(set-env!
+  :src-paths    #{"src"}
+  :tgt-path     "tgt"
+  :dependencies '[[org.apache.tomcat.embed/tomcat-embed-jasper       "8.0.8"]
+                  [org.apache.tomcat.embed/tomcat-embed-logging-juli "8.0.8"]
+                  [org.apache.tomcat.embed/tomcat-embed-core         "8.0.8"] ])
 
-(require
-  '[tailrecursion.boot.task        :refer [install]]
-  '[tailrecursion.boot.task.notify :refer [hear]] )
+(task-options!
+  watch   [:quiet       true]
+  speak   [:theme       "ordinance"]
+  pom     [:project     'tailrecursion/boot.task.tomcat
+           :version      "0.1.0-SNAPSHOT"
+           :description  "Boot task to create a standalone Tomcat server."
+           :url          "http://github.com/tailrecursion/boot.task.tomcat"
+           :scm         {:url "https://github.com/tailrecursion/boot.task.tomcat"}
+           :license     {:name "Eclipse Public License"
+                         :url  "http://www.eclipse.org/legal/epl-v10.html"} ])
 
-(deftask develop []
-  "rebuild and reinstall the library to ~/m2."
-  (comp (watch) (hear) (install)) )
+(deftask develop
+  "Build a war and install it to ~/.m2 when the source changes."
+  []
+  (comp (watch) (speak) (install)) )

@@ -7,20 +7,15 @@
 
 (ns boot.task.tomcat
   (:require
-    [clojure.java.io         :as io]
-    [tailrecursion.boot.core :as c] )
+    [boot.core       :as core]
+    [boot.pod        :as pod]
+    [clojure.java.io :as io] )
   (:import
     [org.apache.catalina.startup Tomcat] ))
 
 ;;; state ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def server (atom nil))
-
-;;; utilities ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defn extract-ids [sym]
-  (let [[group artifact] ((juxt namespace name) sym)]
-    [(or group artifact) artifact] ))
 
 ;;; private ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -35,21 +30,22 @@
     (-> (Tomcat.) start join) ))
 
 (defn destroy [^Tomcat server]
-  (doto server .stop .destroy) )
+  (when server
+    (doto server .stop .destroy) ))
+
+(defn tomcat [& args]
+  (swap! server #(do (destroy %) (apply create args))) )
 
 ;;; public ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(c/deftask tomcat
-  "Boot task to create a standalone Tomcat server.
+(core/deftask serve
+  "Boot task to create Tomcat server."
 
-  The `:port` option specifies which port the server should listen on (default
-  8000). The `:join?` option specifies whether Jetty should run in the foreground
-  (default false)."
-  [& {:keys [port join?] :or {port 8000 join? false}}]
-  (println  "Starting Tomcat server...")
-  (let [artifact-id (second (extract-ids (c/get-env :project)))
-        version     (c/get-env :version) ]
-    (c/with-post-wrap
-      (let [war-file (first (c/by-ext ["war"] (c/src-files)))
-            base-dir #(c/mkoutdir! ::base-dir) ]
-        (swap! server #(do (if % (destroy %)) (create (base-dir) war-file port join?))) ))))
+  [p port  int  "The port the server should listen on. 8000"
+   j join? bool "Whether Jetty should run in the foreground. false"]
+
+  (let [base-dir (core/mktmpdir! ::base-dir)]
+    (core/with-post-wrap
+      (let [war-file (->> (core/src-files) (core/by-ext ["war"]) first)]
+        (pod/call-worker
+          `(boot.task.tomcat/tomcat ~base-dir ~war-file ~port ~join?) )))))
