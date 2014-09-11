@@ -15,7 +15,7 @@ pom.xml.asc
 *.swn
 *.swo
 *.swp
-.boot/tmp
+.boot
 /boot
 /tmp
 .DS_Store
