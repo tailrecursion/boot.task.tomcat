@@ -11,11 +11,9 @@ pom.xml.asc
 .lein-failures
 .lein-plugins
 .lein-repl-history
-.repl-history
+.nrepl-history
 *.swn
 *.swo
 *.swp
 .boot
-/boot
-/tmp
 .DS_Store
