@@ -7,19 +7,21 @@
 
 (ns boot.task.tomcat
   (:require
+    [clojure.java.io :as io]
     [boot.core       :as core]
     [boot.pod        :as pod] ))
 
 (core/deftask serve
   "Boot task to create Tomcat server."
 
-  [p port PORT int  "The port the server should listen on. Default 8080."]
+  [f file PATH str "The path to the war file."
+   p port PORT int "The port the server will listen on."]
 
   (let [pod  (pod/make-pod (assoc (core/get-env)
               :dependencies '[[tailrecursion/boot.worker.tomcat "0.1.0-SNAPSHOT"]]))
         dir  (core/mktmpdir! ::base-dir)
         port (or port 8000)]
     (core/with-post-wrap
-      (when-let [war (->> (core/src-files) (core/by-ext ["war"]) first)]
+      (when-let [war (or (io/file file) (->> (core/src-files) (core/by-ext ["war"]) first))]
         (pod/call-in pod
           `(boot.worker.tomcat/serve ~(.getAbsolutePath dir) ~(.getAbsolutePath war) ~port) )))))
