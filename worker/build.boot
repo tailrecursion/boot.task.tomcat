@@ -13,13 +13,13 @@
                   [org.apache.tomcat.embed/tomcat-embed-core         "8.0.8"] ])
 
 (task-options!
-  watch   [:quiet       true]
+  watch   [:quiet       false]
   speak   [:theme       "ordinance"]
-  pom     [:project     'tailrecursion/boot.task.tomcat
+  pom     [:project     'tailrecursion/boot.worker.tomcat
            :version      "0.1.0-SNAPSHOT"
-           :description  "Boot task to create a standalone Tomcat server."
+           :description  "Boot worker to create a standalone Tomcat server."
            :url          "http://github.com/tailrecursion/boot.task.tomcat"
-           :scm         {:url "https://github.com/tailrecursion/boot.task.tomcat"}
+           :scm         {:url  "https://github.com/tailrecursion/boot.task.tomcat"}
            :license     {:name "Eclipse Public License"
                          :url  "http://www.eclipse.org/legal/epl-v10.html"} ])
 

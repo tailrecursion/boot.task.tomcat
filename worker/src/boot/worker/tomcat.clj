@@ -5,10 +5,8 @@
 ;;; terms of this license.  You must not remove this notice, or any other, from this software.
 ;;;-------------------------------------------------------------------------------------------------
 
-(ns boot.task.tomcat
+(ns boot.worker.tomcat
   (:require
-    [boot.core       :as core]
-    [boot.pod        :as pod]
     [clojure.java.io :as io] )
   (:import
     [org.apache.catalina.startup Tomcat] ))
@@ -36,16 +34,5 @@
 (defn tomcat [& args]
   (swap! server #(do (destroy %) (apply create args))) )
 
-;;; public ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(core/deftask serve
-  "Boot task to create Tomcat server."
-
-  [p port  int  "The port the server should listen on. 8000"
-   j join? bool "Whether Jetty should run in the foreground. false"]
-
-  (let [base-dir (core/mktmpdir! ::base-dir)]
-    (core/with-post-wrap
-      (let [war-file (->> (core/src-files) (core/by-ext ["war"]) first)]
-        (pod/call-worker
-          `(boot.task.tomcat/tomcat ~base-dir ~war-file ~port ~join?) )))))
+(defn hello []
+  (println "hello world") )
