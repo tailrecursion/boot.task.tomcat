@@ -1,0 +1,6 @@
+exit
+(require `boot.worker.tomcat :reload-all)
+(require 'boot.worker.tomcat :reload-all)
+(in-ns boot.worker.tomcat)
+(in-ns 'boot.worker.tomcat)
+exit

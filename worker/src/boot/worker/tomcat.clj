@@ -17,22 +17,17 @@
 
 ;;; private ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn create [base-dir war-file port join?]
-  (let [join  #(if join? (do (.await (.getServer %)) %) %)
-        start #(doto %
-                (.setBaseDir (.getAbsolutePath base-dir))
-                (.setPort port)
-                (.addWebapp "" (.getAbsolutePath war-file))
-                (.start) )]
-    (.mkdirs (io/file base-dir "webapps"))
-    (-> (Tomcat.) start join) ))
+(defn create [dir war port]
+  (.mkdirs (io/file dir "webapps"))
+  (doto (Tomcat.)
+    (.setBaseDir dir)
+    (.setPort port)
+    (.addWebapp "" war)
+    (.start) ))
 
 (defn destroy [^Tomcat server]
   (when server
     (doto server .stop .destroy) ))
 
-(defn tomcat [& args]
+(defn serve [& args]
   (swap! server #(do (destroy %) (apply create args))) )
-
-(defn hello []
-  (println "hello world") )

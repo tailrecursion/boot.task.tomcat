@@ -10,17 +10,16 @@
     [boot.core       :as core]
     [boot.pod        :as pod] ))
 
-;; (boot.task.tomcat/tomcat base-dir war-file port join?)
-
 (core/deftask serve
   "Boot task to create Tomcat server."
 
-  [p port PORT int  "The port the server should listen on. Default 8000."]
+  [p port PORT int  "The port the server should listen on. Default 8080."]
 
-  (let [pod (pod/make-pod (assoc (core/get-env) :dependencies '[[tailrecursion/boot.tomcat "0.1.0-SNAPSHOT"]]))
-        dir (core/mktmpdir! ::base-dir) ]
+  (let [pod  (pod/make-pod (assoc (core/get-env)
+              :dependencies '[[tailrecursion/boot.worker.tomcat "0.1.0-SNAPSHOT"]]))
+        dir  (core/mktmpdir! ::base-dir)
+        port (or port 8000)]
     (core/with-post-wrap
       (when-let [war (->> (core/src-files) (core/by-ext ["war"]) first)]
-        (println :vars dir war port)
         (pod/call-in pod
-          `(boot.worker.tomcat/hello) )))))
+          `(boot.worker.tomcat/serve ~(.getAbsolutePath dir) ~(.getAbsolutePath war) ~port) )))))
