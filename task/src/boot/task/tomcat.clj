@@ -20,8 +20,8 @@
   (let [pod  (pod/make-pod (assoc (core/get-env)
               :dependencies '[[tailrecursion/boot.worker.tomcat "0.1.0-SNAPSHOT"]]))
         dir  (core/mktmpdir! ::base-dir)
-        port (or port 8000)]
-    (core/with-post-wrap
+        port (or port 8000) ]
+    (core/with-pre-wrap
       (when-let [war (or (io/file file) (->> (core/src-files) (core/by-ext ["war"]) first))]
         (pod/call-in pod
           `(boot.worker.tomcat/serve ~(.getAbsolutePath dir) ~(.getAbsolutePath war) ~port) )))))

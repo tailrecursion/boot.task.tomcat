@@ -16,14 +16,9 @@
   watch   [:quiet       false]
   speak   [:theme       "ordinance"]
   pom     [:project     'tailrecursion/boot.worker.tomcat
-           :version      "0.1.0-SNAPSHOT"
-           :description  "Boot worker to create a standalone Tomcat server."
-           :url          "http://github.com/tailrecursion/boot.task.tomcat"
+           :version     "0.1.0-SNAPSHOT"
+           :description "Boot worker to create a standalone Tomcat server."
+           :url         "http://github.com/tailrecursion/boot.task.tomcat"
            :scm         {:url  "https://github.com/tailrecursion/boot.task.tomcat"}
            :license     {:name "Eclipse Public License"
                          :url  "http://www.eclipse.org/legal/epl-v10.html"} ])
-
-(deftask develop
-  "Build a war and install it to ~/.m2 when the source changes."
-  []
-  (comp (watch) (speak) (install)) )
