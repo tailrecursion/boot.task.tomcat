@@ -14,14 +14,14 @@
 (core/deftask serve
   "Boot task to create Tomcat server."
 
-  [f file PATH str "The path to the war file."
-   p port PORT int "The port the server will listen on."]
+  [f file PATH #{str} "The path to the war file(s)."
+   p port PORT int    "The port the server will listen on."]
 
   (let [pod  (pod/make-pod (assoc (core/get-env)
               :dependencies '[[tailrecursion/boot.worker.tomcat "0.1.0-SNAPSHOT"]]))
-        dir  (core/mktmpdir! ::base-dir)
-        port (or port 8000) ]
+        port (atom (or port 8000)) ]
     (core/with-pre-wrap
-      (when-let [war (or (io/file file) (->> (core/src-files) (core/by-ext ["war"]) first))]
+      (doseq [war  (if file (map io/file file) (core/by-ext ["war"] (core/src-files)))
+              :let [dir (core/mktmpdir! (keyword (str *ns*) (str "base-dir." @port))) ]]
         (pod/call-in pod
-          `(boot.worker.tomcat/serve ~(.getAbsolutePath dir) ~(.getAbsolutePath war) ~port) )))))
+          `(boot.worker.tomcat/create ~(.getAbsolutePath dir) ~(.getAbsolutePath war) ~(- (swap! port inc) 1) ))))))

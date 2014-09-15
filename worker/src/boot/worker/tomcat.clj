@@ -11,8 +11,6 @@
   (:import
     [org.apache.catalina.startup Tomcat] ))
 
-(def server (atom nil))
-
 (defn create [dir war port]
     (.mkdirs (io/file dir "webapps"))
     (doto (Tomcat.)
@@ -25,6 +23,3 @@
 (defn destroy [^Tomcat server]
   (when server
     (doto server .stop .destroy) ))
-
-(defn serve [& args]
-  (swap! server #(do (destroy %) (apply create args))) )
