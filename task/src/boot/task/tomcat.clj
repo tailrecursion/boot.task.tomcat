@@ -15,7 +15,7 @@
   "Boot task to create Tomcat server."
 
   [f file PATH #{str} "The path to the war file(s)."
-   p port PORT int    "The port the server will listen on."]
+   p port PORT int    "The port the server will listen on, incremented for each additional war."]
 
   (let [pod  (pod/make-pod (assoc (core/get-env)
               :dependencies '[[tailrecursion/boot.worker.tomcat "0.1.0-SNAPSHOT"]]))
@@ -24,4 +24,4 @@
       (doseq [war  (if file (map io/file file) (core/by-ext ["war"] (core/src-files)))
               :let [dir (core/mktmpdir! (keyword (str *ns*) (str "base-dir." @port))) ]]
         (pod/call-in pod
-          `(boot.worker.tomcat/create ~(.getAbsolutePath dir) ~(.getAbsolutePath war) ~(- (swap! port inc) 1) ))))))
+          `(boot.worker.tomcat/create ~(.getPath dir) ~(.getPath war) ~(- (swap! port inc) 1) ))))))

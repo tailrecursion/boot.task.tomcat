@@ -19,5 +19,3 @@
            :scm         {:url  "https://github.com/tailrecursion/boot.task.tomcat"}
            :license     {:name "Eclipse Public License"
                          :url  "http://www.eclipse.org/legal/epl-v10.html"} ])
-
-(require '[boot.task.tomcat :refer [serve]] )

@@ -19,7 +19,3 @@
       (as-> % (.setParentClassLoader (.getServer %) (.getContextClassLoader (Thread/currentThread))))
       (.addWebapp "" war)
       (.start) ))
-
-(defn destroy [^Tomcat server]
-  (when server
-    (doto server .stop .destroy) ))
