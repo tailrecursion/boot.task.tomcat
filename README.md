@@ -8,7 +8,7 @@ from build.boot:
 (deftask develop
   "Run service during development."
   []
-  (comp (watch) (speak) (uber) (add-src) (web) (war) (serve)) )
+  (comp (watch) (speak) (add-src) (web) (uber) (war) (serve)) )
 ```
 
 from the command line:
