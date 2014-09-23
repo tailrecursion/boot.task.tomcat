@@ -24,4 +24,4 @@
       (doseq [war  (if file (map io/file file) (core/by-ext ["war"] (core/src-files)))
               :let [dir (core/mktmpdir! (keyword (str *ns*) (str "base-dir." @port))) ]]
         (pod/call-in pod
-          `(boot.worker.tomcat/create ~(.getPath dir) ~(.getPath war) ~(- (swap! port inc) 1) ))))))
+          `(boot.worker.tomcat/create ~(.getPath dir) ~(.getAbsolutePath war) ~(- (swap! port inc) 1) ))))))

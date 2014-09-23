@@ -7,7 +7,7 @@
 
 (set-env!
   :src-paths #{"src"}
-  :tgt-path  "tgt" )
+  :tgt-path  "tgt")
 
 (task-options!
   watch   [:quiet       false]
@@ -19,3 +19,8 @@
            :scm         {:url  "https://github.com/tailrecursion/boot.task.tomcat"}
            :license     {:name "Eclipse Public License"
                          :url  "http://www.eclipse.org/legal/epl-v10.html"} ])
+
+(deftask build
+  "Build the jar distribution and install it to the local maven repo."
+  []
+  (comp (speak) (add-src) (pom) (jar) (install)) )
