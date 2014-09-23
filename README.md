@@ -1,4 +1,4 @@
-# boot.task.tomcat
+# boot.task.tomcat (experimental)
 a local development server for boot 2.
 
 ## usage
@@ -8,7 +8,7 @@ from build.boot:
 (deftask develop
   "Run service during development."
   []
-  (comp (watch) (speak) (war) (serve)) )
+  (comp (watch) (speak) (uber) (add-src) (web) (war) (serve)) )
 ```
 
 from the command line:
