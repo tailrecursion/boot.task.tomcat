@@ -12,10 +12,10 @@
     [org.apache.catalina.startup Tomcat] ))
 
 (defn create [dir war port]
-    (.mkdirs (io/file dir "webapps"))
-    (doto (Tomcat.)
-      (.setBaseDir dir)
-      (.setPort port)
-      (as-> % (.setParentClassLoader (.getServer %) (.getContextClassLoader (Thread/currentThread))))
-      (.addWebapp "" war)
-      (.start) ))
+  (.mkdirs (io/file dir "webapps"))
+  (doto (Tomcat.)
+    (.setBaseDir dir)
+    (.setPort port)
+    (as-> % (.setParentClassLoader (.getServer %) (.getContextClassLoader (Thread/currentThread))))
+    (.addWebapp "" war)
+    (.start) ))
