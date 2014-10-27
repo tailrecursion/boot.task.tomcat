@@ -18,7 +18,7 @@
    p port PORT int    "The port the server will listen on, incremented for each additional war."]
 
   (let [pod  (pod/make-pod (assoc (core/get-env)
-              :dependencies '[[tailrecursion/boot.worker.tomcat "0.1.1-SNAPSHOT"]]))
+              :dependencies '[[tailrecursion/boot.worker.tomcat "0.0.1-SNAPSHOT"]]))
         port (atom (or port 8000)) ]
     (core/with-pre-wrap
       (doseq [war  (if file (map io/file file) (core/by-ext ["war"] (core/tgt-files)))

@@ -21,7 +21,7 @@
   watch   [:quiet       false]
   speak   [:theme       "ordinance"]
   pom     [:project     'tailrecursion/boot.worker.tomcat
-           :version     "0.1.1-SNAPSHOT"
+           :version     "0.0.1-SNAPSHOT"
            :description "Boot worker to create a standalone Tomcat server."
            :url         "http://github.com/tailrecursion/boot.task.tomcat"
            :scm         {:url  "https://github.com/tailrecursion/boot.task.tomcat"}
